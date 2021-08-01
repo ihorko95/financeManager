@@ -1,0 +1,84 @@
+{% extends 'goods/index_base.html' %}
+
+{% block content %}
+{#    {{ cat_selected }}#}
+      <div class="card-header">
+        {% if not cat_selected %}
+            <span>All</span>
+        {% else %}
+            <a href="{% url 'home_url'%} ">All</a>
+        {% endif %}
+          {% for categ in category %}
+            {% if categ.goods_set.exists%}
+                {% if cat_selected  == categ.pk%}
+                    <span>{{ categ.name }}</span>
+                {% else %}
+                    <a href="{{ categ.get_absolute_url }}">{{ categ.name }}</a>
+                {% endif %}
+            {% endif %}
+          {% endfor %}
+  </div>
+
+      <div class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+      <p class="fw-bold">Total:</p>
+    </div>
+    <span class="badge bg-primary rounded-pill ">{{summ}}₴</span>
+  </div>
+
+{% for transaction in goods %}
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">{{ transaction.title|title }}</h5>
+{#      <span>{{ transaction.cat }}</span>#}
+    <p class="card-text">{{ transaction.body|truncatewords:5 }}</p>
+    <div class=" d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+            <p>{{ transaction.quantity}} X {{transaction.price}}</p>
+        </div>
+        <span class="badge bg-primary rounded-pill ">{{transaction.get_total_price }} ₴</span>
+    </div>
+    <a href="{{ transaction.get_absolute_url }}" class="btn btn-primary">Details</a>
+  </div>
+</div>
+{% endfor %}
+
+{% if goods.has_other_pages %}
+  <nav aria-label="..." class='d-flex justify-content-center'>
+  <ul class="pagination">
+    {% if goods.has_previous %}
+        <li class="page-item ">
+            <a class="page-link" href="?page={{ goods.previous_page_number }}"><<</a>
+        </li>
+    {% else %}
+        <li class="page-item disabled">
+            <span class="page-link"><<</span>
+        </li>
+    {% endif %}
+
+
+    {% for p in goods.paginator.page_range %}
+        {% if goods.number == p %}
+
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">{{ p }}</span>
+            </li>
+            {% elif p >= goods.number|add:-2 and p <= goods.number|add:2%}
+
+            <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+        {% endif %}
+    {% endfor %}
+
+    {% if goods.has_next %}
+        <li class="page-item ">
+            <a class="page-link" href="?page={{ goods.next_page_number }}">>></a>
+        </li>
+    {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">>></span>
+        </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+{% endblock %}

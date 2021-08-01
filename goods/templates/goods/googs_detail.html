@@ -1,0 +1,19 @@
+{% extends 'goods/index_base.html' %}
+{% block title %}
+{{ content.title|title }} - {{ block.super }}
+{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <span>{{ content.time_add }}</span>
+    <span>{{ content.cat }}</span>
+
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ content.title|title }}</h5>
+    <p class="card-text">{{ content.body|linebreaksbr }}</p>
+    <span class="badge bg-primary rounded-pill ">{{content.price}}₴</span>
+
+  </div>
+</div>
+{% endblock %}
