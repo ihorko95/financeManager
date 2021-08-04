@@ -1,0 +1,33 @@
+{% extends 'goods/index_base.html' %}
+
+{% block content %}
+    <h1>Categories</h1>
+    {% for category in content %}
+    <div class="card">
+        <div class="card-header">
+            <span>Added: {{ category.time_add }}</span>
+        </div>
+        <div class="d-flex justify-content-start">
+        <div class="card-body">
+            <h5 class="card-title">{{ category.name|title }}</h5>
+            <p class="card-text">{{ category.body|linebreaksbr }}</p>
+            <p class="card-text">{{ category.goods_set }}</p>
+{#            {% for good in category.goods_set %}#}
+{#                <span class="card-text ">{{good}}₴</span>#}
+{#            {% endfor %}#}
+        </div>
+            {% if request.user.is_authenticated %}
+            <div class="d-flex align-items-center hider">
+                <a href="{% url 'category_update_url' slug=category.slug %}" class="btn btn-outline-dark">Update</a>
+                <a href="{% url 'category_delete_url' slug=category.slug %}"  class="btn btn-danger" >Delete</a>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+    {% endfor %}
+    {% if request.user.is_authenticated %}
+    <div class="d-flex justify-content-center"><a href="{% url 'category_add_url' %}" class="btn btn-outline-success">Add Category</a></div>
+{% endif %}
+
+{% endblock %}

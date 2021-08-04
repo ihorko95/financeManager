@@ -1,0 +1,35 @@
+{% extends 'goods/index_base.html' %}
+
+{% block title %}
+Login - {{ block.super }}
+{% endblock %}
+{% block content %}
+    <h1>Login</h1>
+    {% if request.user.is_authenticated %}
+        <h1>You have already login as: "
+        {% if user.first_name and user.last_name%}
+            {{ user.first_name }} {{ user.last_name }}
+        {% else %}
+            {{ user.username }}
+        {% endif %}
+        "</h1>
+    {% else %}
+    <form method="post">
+    {% csrf_token %}
+ {% for field in form %}
+    <div class="mb-3">
+                {% if field.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ field.errors}}
+                    </div>
+                {% endif %}
+        <div><label class="form-label"> {{ field.label }}</label></div>
+        <div>{{ field }}</div>
+    </div>
+{% endfor %}
+
+    <button class='btn btn-primary' type="submit">Login</button>
+    </form>
+    {% endif %}
+{% endblock %}
+

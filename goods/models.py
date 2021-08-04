@@ -6,6 +6,7 @@ from django.urls import reverse
 
 class Goods(models.Model):
     title = models.CharField(max_length=32, db_index=True)
+
     slug = models.SlugField(max_length=32, unique=True, verbose_name='URL')
     body = models.CharField(max_length=255, db_index=True, blank=True, verbose_name='Description')
     quantity = models.DecimalField(max_digits=4, decimal_places=0, default=1) #1000
@@ -13,6 +14,7 @@ class Goods(models.Model):
     is_required = models.BooleanField(default=True)
     time_add = models.DateTimeField(auto_now_add=True, verbose_name='Time (add)')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Time (update)')
+    # slug = AutoSlugField(populate_from='title', unique_with='pub_date__month')
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Category',blank=True, default=1)
     class Meta:
         ordering=['-time_add','title']

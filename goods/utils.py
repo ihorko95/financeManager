@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
-menu_items ={'Add Transaction':'goods_add_url', 'Add category':'category_add_url', 'Pricing':0, 'FAQs':0, 'About':0}
+menu_items ={'Add Transaction':'goods_add_url', 'Categories':'category_list_url', }
+
 
 class ListMixin:
     model=None

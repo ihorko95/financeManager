@@ -19,13 +19,25 @@
 
         </ul>
 
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" action="{% url 'home_url' %}">
+          <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search" name="search">
         </form>
 
         <div class="text-end">
-          <a href="/admin" class="btn btn-outline-light me-2">Login</a>
-          <button type="button" class="btn btn-warning">Sign-up</button>
+            {% if request.user.is_authenticated %}
+                {% if user.first_name and user.last_name%}
+                    <span class="  me-2">{{ user.first_name }} {{ user.last_name }}</span>
+                {% else %}
+                    <span class="  me-2">{{ user.username }}</span>
+                {% endif %}
+                {% if user.is_staff %}
+                <a href="/admin" class="btn btn-outline-light">Admin Panel</a>
+                {% endif %} 
+          <a href="{% url 'logout' %}" class="btn btn-warning">Logout</a>
+            {% else %}
+          <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
+          <a href="{% url 'register' %}" class="btn btn-warning">Sign-up</a>
+            {% endif %}
         </div>
       </div>
     </div>
