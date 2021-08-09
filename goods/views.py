@@ -180,14 +180,36 @@ def generateReport(request):
                         cat__name=data['operation'])
 
                 #make json
-                obj_dict={}
-                for obj in goods_obj:
-                    if str(obj.time_add.date()) not in obj_dict.keys():
-                        obj_dict[str(obj.time_add.date())]= [0,[]]
-                    obj_dict[str(obj.time_add.date())][0]+= float(obj.get_total_price())
-                    obj_dict[str(obj.time_add.date())][1].append(obj.title)
-                # print(goods_obj)
-                # print(obj_dict)
+                # obj_dict={}
+                # i = 0
+                # obj_dict[i] = ['', 0, []]
+                #
+                # for obj in goods_obj.order_by('time_add'):
+                #     if str(obj.time_add.date()) !=  obj_dict[i][0] and obj_dict[i][0] != '':
+                #         i += 1
+                #         obj_dict[i]= ['',0,[]]
+                #
+                #     obj_dict[i][0]= str(obj.time_add.date())
+                #     obj_dict[i][1]+= float(obj.get_total_price())
+                #     obj_dict[i][2].append(obj.title)
+                obj_dict=[]
+                i = 0
+                temp = { 'x':'', 'y': 0,'z': []}
+
+                for obj in goods_obj.order_by('time_add'):
+                    if str(obj.time_add.date()) !=  temp['x'] and temp['x'] != '':
+                        i += 1
+                        temp = {'x': '', 'y': 0, 'z': []}
+                    temp['x'] = str(obj.time_add.date())
+                    temp['y'] += float(obj.get_total_price())
+                    temp['z'].append(obj.title)
+
+                    obj_dict.append(temp)
+
+                print('Data: ')
+                print(goods_obj)
+                print('To JSON: ')
+                print(obj_dict)
 
                # qs_json = serializers.serialize('json', obj_dict)
                 qs_json = json.dumps(obj_dict, indent=4)
