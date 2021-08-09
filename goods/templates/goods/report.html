@@ -16,6 +16,7 @@ Report Chart
         {#  });#}
 
         var json_data =JSON.parse(JSON.stringify({{ test | safe}}))
+        var chart_data =JSON.parse(JSON.stringify({{ chart_data | safe}}))
         console.log( json_data['x']);
 
 
@@ -26,61 +27,38 @@ Report Chart
 {#    {% endfor %}#}
 
 <canvas id="myChart"  height="30vh" width="100vw"></canvas>
+<canvas id="financeReport"  height="30vh" width="100vw"></canvas>
+    <div id="chart_div" style="width: 100%; height: 500px;"></div>
+<script src="/static/js/report_chart.js"></script>
+<script>
+{#var ctx = document.getElementById('myChart');#}
+{#var myChart = new Chart(ctx, testChart);#}
 
-    <script>
-var ctx = document.getElementById('myChart');
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: json_data.x,
-        datasets: [{
-            label: '# of Votes',
-            data: json_data,
+google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
-            borderColor: [
-                'rgba(54, 162, 235, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(54, 162, 235, 1)'
-            ],
-            borderWidth: 3
-        }]
-    },
-    options: {
-        parsing: {
-            xAxisKey: 'x',
-            yAxisKey: 'y'
-        },
-        plugins: {
-   tooltips: {
-       callbacks: {
-           title: function (tooltipItem, data) {
-               return data['y'][tooltipItem[0]['index']];
-           },
-       }
-   },
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(
+            chart_data
+        {#    [#}
+        {#  ['Year', 'Sales', 'Expenses'],#}
+        {#  ['2013',  1000,      400],#}
+        {#  ['2014',  1170,      460],#}
+        {#  ['2015',  660,       1120],#}
+        {#  ['2016',  1030,      540]#}
+        {#]#}
+        );
 
-            legend: {
+        var options = {
+          title: 'Expenses',
+          hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
 
-                display: false,
-                labels: {
-                    color: 'rgb(255, 99, 132)',
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
 
-                }
-            }
-        },
-        scales: {
 
-            y: {
-                display: true,
-                title: {
-                    display: true,
-                    text: '₴'
-                },
-                beginAtZero: true
-            }
-        }
-    }
-});
 </script>
 {% endblock %}

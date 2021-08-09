@@ -169,8 +169,6 @@ def generateReport(request):
             if data['time_to'] < data['time_from']:
                 form.add_error(None,"Date is not correct. 'Date From' must be before 'Date To'.")
             else:
-                #print('Operation: ')
-                #print(data['operation'])
                 if data['operation'] == None:
                     goods_obj = Goods.objects.filter(
                         Q(time_add__gte=data['time_from']) and Q(time_add__lte=data['time_to']))
@@ -206,21 +204,49 @@ def generateReport(request):
 
                     obj_dict.append(temp)
 
-                print('Data: ')
-                print(goods_obj)
-                print('To JSON: ')
-                print(obj_dict)
+                # print('Data: ')
+                # print(goods_obj)
+                # print('To JSON: ')
+                # print(obj_dict)
 
-               # qs_json = serializers.serialize('json', obj_dict)
+
+                #Category JSON
+                # print('Data: ')
+                # print(goods_obj)
+                cat_dict=[]
+                # i = 0
+                # temp = {'category': '', 'value':[{ 'x': '', 'y': 0, 'z': []}]}
+                data_labels = ['Date']
+                # print('Here: ')
+                cats_labels=set(goods_obj.values_list('cat__name'))
+
+                # print(cats_labels)
+                for label in cats_labels:
+                    data_labels.append(str(label).replace("'",'').replace("(",'').replace(")",'').replace(",",'')) #WTF???
+                data_res=[]
+                data_res.append(data_labels)
+                data_template = [0] * len(data_labels)
+                for obj in goods_obj.order_by('time_add'):
+                    if str(obj.time_add.date()) != data_template[0]:
+                        data_template = [0] * len(data_labels)
+                        data_template[0]= str(obj.time_add.date())
+                    cat_index=data_labels.index(str(obj.cat))
+                    data_template[cat_index]+=float(obj.get_total_price())
+                    data_res.append(data_template)
+                print(data_res)
+
+                # if temp1['category']['value']['x'] == 'hi':
+                #     print('That is true')
+                # for obj in goods_obj.order_by('time_add'):
+                #     if str(obj.time_add.date()) != temp['value']['x'] and temp['value']['x'] != '' :
+                #         print('hello')
+                chart_json = json.dumps(data_res, indent=4)
                 qs_json = json.dumps(obj_dict, indent=4)
-                #qs_json.replace(/&quot;/g,'"')
-                # print (qs_json)
-                # test =JsonResponse({'Python': 52.9, 'Jython': 1.6, 'Iron Python': 27.7})
-                #get_json(obj_dict)
-                #get_report_data(request, data=goods_obj)
+
                 context = {
                     'menu_items': menu_items,
-                    'data':goods_obj,
+                    'chart_data': chart_json,
+                    'dataw':goods_obj,
                     'test':qs_json
                     # 'test': get_report_data(request,data=goods_obj)
                 }
