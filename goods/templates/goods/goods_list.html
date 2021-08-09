@@ -26,8 +26,21 @@
     </div>
     <span class="badge bg-primary rounded-pill ">{{summ}}₴</span>
   </div>
+    {{ goods.count }}
+{#    {% if goods.count > 1%}#}
 
+        {% for order in orders %}
+            {% if order_query == order %}
+                <a href="?order=-{{ order }}">▽{{ order }}</a>
+                {% else %}
+                <a href="?order={{ order }}">△{{ order }}</a>
+            {% endif %}
+        {% endfor %}
+{#    {% endif %}#}
 {% for transaction in goods %}
+    <div class="card-header">
+    {{ transaction.time_add }}
+    </div>
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">{{ transaction.title|title }}</h5>

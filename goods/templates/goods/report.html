@@ -1,0 +1,61 @@
+{% extends 'goods/index_base.html' %}
+
+{% block title %}
+Report Chart
+{% endblock %}
+{% block content %}
+    <script>
+        var endpoint = '/data/';
+        fetch(endpoint)
+          .then((response) => {
+            return response.json();
+          })
+          .then((a) => {
+            {#console.log(a);#}
+
+          });
+
+
+        {#console.log({{ test }});#}
+        var json_data = JSON.parse({{ test | escapejs }});
+        console.log({{ json_data }});
+        {#console.log({{ json_data }});#}
+</script>
+
+    {% for datum in test %}
+    {{ datum}}
+    {% endfor %}
+
+<canvas id="myChart"  height="30vh" width="100vw"></canvas>
+
+    <script>
+var ctx = document.getElementById('myChart');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: 'obj.keys',
+        datasets: [{
+            label: '# of Votes',
+            data: 'a.values',
+
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

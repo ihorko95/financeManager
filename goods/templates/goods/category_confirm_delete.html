@@ -6,6 +6,7 @@ Delete Category - {{ block.super }}
     <h2>Delete Category </h2>
 <form method="post">{% csrf_token %}
     <p>Are you sure you want to delete "{{ object }}"?</p>
-    <input type="submit" value="Confirm">
+    <input class="btn btn-outline-danger" type="submit" value="Confirm">
+    <a class="btn btn-outline-dark" href="{% url 'category_list_url' %}">Cancel</a>
 </form>
 {% endblock %}

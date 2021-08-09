@@ -23,4 +23,10 @@ urlpatterns = [
     path('sign-up/', Registration.as_view(), name='register'),
     path('login/', LoginUser.as_view(), name='login'),
     path('logout/', logOutUser, name='logout'),
+
+    path('reports/', generateReport, name='generate_report_url'),
+    path('data/', get_report_data, name='get_report_data_url'),
+
+
+
 ]
